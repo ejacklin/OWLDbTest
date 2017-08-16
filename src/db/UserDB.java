@@ -31,7 +31,7 @@ public class UserDB {
         UserDB db = new UserDB();
 
 //        Session s = db.getSessionById(2);
-        UserEntity u = db.getUserById(6);
+        UserEntity u = db.getUserById(12);
         System.out.println(u.getFirstName());
 //        System.out.println(s.getDate());
     }
