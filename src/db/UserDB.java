@@ -15,16 +15,14 @@ import java.util.List;
 public class UserDB {
 
     private static EntityManager em;
-    private ArrayList<User> dUsers;
-    private ArrayList<Session> dSessions;
-    private ArrayList<Exercise> dExercises;
+    private ArrayList<Session> dSessions = new ArrayList<>();;
+    private ArrayList<Exercise> dExercises = new ArrayList<>();
 
 
     public static UserEntity getUserById(Integer id){
         em = DBUtil.getEmFactory().createEntityManager();
         try{
-            UserEntity user = em.find(UserEntity.class, id);
-            return user;
+            return  em.find(UserEntity.class, id);
         }finally {
             em.close();
         }
@@ -59,8 +57,11 @@ public class UserDB {
                     }
                     Collection<StrengthEntity> strengths = e.getStrengthsByExerciseId();
                     for(StrengthEntity st : strengths){
-                        dExercises.add(new Strength(e.getName(),Integer.toString(st.getReps()),
-                                Integer.toString(st.getWeight()),Integer.toString(st.getSets())));
+                        System.out.println(e.getName() + "  " + Integer.toString(st.getReps()) + "  " +
+                                Integer.toString(st.getWeight())  + "  " + Integer.toString(st.getSets()));
+                        Strength strength = new Strength(e.getName(),Integer.toString(st.getReps()),
+                                Integer.toString(st.getWeight()),Integer.toString(st.getSets()));
+                        dExercises.add(strength);
                     }
                 }
                  work = new Workout(w.getName(),dExercises);
@@ -68,8 +69,8 @@ public class UserDB {
             DateFormat format_date = new SimpleDateFormat("EEE, MMM d, ''yy");
             dSessions.add(new Session(format_date.format(s.getDate()),work));
         }
-        User user = new User(userEntity.getUsername(),userEntity.getPassword(),userEntity.getEmail(),dSessions);
-        return user;
+
+        return new User(userEntity.getUsername(),userEntity.getPassword(),userEntity.getEmail(),dSessions);
     }
 
 
