@@ -74,12 +74,37 @@ public class UserDB {
     }
 
 
+    public void InsertIntoDB(UserEntity userEntity){
+
+        em = DBUtil.getEmFactory().createEntityManager();
+        em.getTransaction().begin();
+        em.persist(userEntity);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+
 
 
     public static void main(String[] args){
         UserDB userDB = new UserDB();
         UserEntity user = userDB.findWithUsername("tlanister");
         User u = userDB.GetDBResponse(user);
-        System.out.println(user.getLastName());
+        System.out.println(u.getUserName());
+
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail("dtargaryen@gmail.com");
+        userEntity.setUsername("dtargaryen");
+        userEntity.setPassword("drogon");
+        userEntity.setUserId(5);
+        userEntity.setFirstName("Denarys");
+        userEntity.setLastName("Targaryen");
+
+
+        userDB.InsertIntoDB(userEntity);
+
+
+
     }
 }
