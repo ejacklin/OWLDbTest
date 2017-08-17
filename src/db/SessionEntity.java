@@ -2,6 +2,7 @@ package db;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 
 /**
  * Created by Erin on 8/13/2017.
@@ -12,9 +13,11 @@ public class SessionEntity {
     private int sessionId;
     private int userId;
     private Date date;
+    private UserEntity userByUserId;
+    private Collection<WorkoutEntity> workoutsBySessionId;
 
     @Id
-    @Column(name = "session_id")
+    @Column(name = "session_id", nullable = false)
     public int getSessionId() {
         return sessionId;
     }
@@ -24,7 +27,7 @@ public class SessionEntity {
     }
 
     @Basic
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false, updatable = false, insertable = false)
     public int getUserId() {
         return userId;
     }
@@ -34,7 +37,7 @@ public class SessionEntity {
     }
 
     @Basic
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     public Date getDate() {
         return date;
     }
@@ -63,5 +66,24 @@ public class SessionEntity {
         result = 31 * result + userId;
         result = 31 * result + (date != null ? date.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    public UserEntity getUserByUserId() {
+        return userByUserId;
+    }
+
+    public void setUserByUserId(UserEntity userByUserId) {
+        this.userByUserId = userByUserId;
+    }
+
+    @OneToMany(mappedBy = "sessionBySessionId")
+    public Collection<WorkoutEntity> getWorkoutsBySessionId() {
+        return workoutsBySessionId;
+    }
+
+    public void setWorkoutsBySessionId(Collection<WorkoutEntity> workoutsBySessionId) {
+        this.workoutsBySessionId = workoutsBySessionId;
     }
 }

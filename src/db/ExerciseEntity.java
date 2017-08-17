@@ -2,6 +2,7 @@ package db;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Created by Erin on 8/13/2017.
@@ -11,16 +12,15 @@ import java.io.Serializable;
 public class ExerciseEntity {
     private int exerciseId;
     private int workoutId;
-    private Serializable type;
-    private Integer distance;
-    private Integer time;
-    private Integer weight;
-    private Integer sets;
-    private Integer reps;
+    private String type;
     private String name;
+    private Collection<CardioEntity> cardiosByExerciseId;
+    private WorkoutEntity workoutByWorkoutId;
+    private Collection<StrengthEntity> strengthsByExerciseId;
+
 
     @Id
-    @Column(name = "exercise_id")
+    @Column(name = "exercise_id", nullable = false)
     public int getExerciseId() {
         return exerciseId;
     }
@@ -30,7 +30,7 @@ public class ExerciseEntity {
     }
 
     @Basic
-    @Column(name = "workout_id")
+    @Column(name = "workout_id", nullable = false, updatable = false, insertable = false)
     public int getWorkoutId() {
         return workoutId;
     }
@@ -40,67 +40,18 @@ public class ExerciseEntity {
     }
 
     @Basic
-    @Column(name = "type")
-    public Serializable getType() {
+    @Column(name = "type", nullable = false, length = 8)
+    public String getType() {
         return type;
     }
 
-    public void setType(Serializable type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    @Basic
-    @Column(name = "distance")
-    public Integer getDistance() {
-        return distance;
-    }
-
-    public void setDistance(Integer distance) {
-        this.distance = distance;
-    }
 
     @Basic
-    @Column(name = "time")
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    @Basic
-    @Column(name = "weight")
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    @Basic
-    @Column(name = "sets")
-    public Integer getSets() {
-        return sets;
-    }
-
-    public void setSets(Integer sets) {
-        this.sets = sets;
-    }
-
-    @Basic
-    @Column(name = "reps")
-    public Integer getReps() {
-        return reps;
-    }
-
-    public void setReps(Integer reps) {
-        this.reps = reps;
-    }
-
-    @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 50)
     public String getName() {
         return name;
     }
@@ -119,11 +70,6 @@ public class ExerciseEntity {
         if (exerciseId != that.exerciseId) return false;
         if (workoutId != that.workoutId) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (distance != null ? !distance.equals(that.distance) : that.distance != null) return false;
-        if (time != null ? !time.equals(that.time) : that.time != null) return false;
-        if (weight != null ? !weight.equals(that.weight) : that.weight != null) return false;
-        if (sets != null ? !sets.equals(that.sets) : that.sets != null) return false;
-        if (reps != null ? !reps.equals(that.reps) : that.reps != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
@@ -134,12 +80,35 @@ public class ExerciseEntity {
         int result = exerciseId;
         result = 31 * result + workoutId;
         result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (distance != null ? distance.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (sets != null ? sets.hashCode() : 0);
-        result = 31 * result + (reps != null ? reps.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "exerciseByExerciseId")
+    public Collection<CardioEntity> getCardiosByExerciseId() {
+        return cardiosByExerciseId;
+    }
+
+    public void setCardiosByExerciseId(Collection<CardioEntity> cardiosByExerciseId) {
+        this.cardiosByExerciseId = cardiosByExerciseId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "workout_id", referencedColumnName = "workout_id", nullable = false)
+    public WorkoutEntity getWorkoutByWorkoutId() {
+        return workoutByWorkoutId;
+    }
+
+    public void setWorkoutByWorkoutId(WorkoutEntity workoutByWorkoutId) {
+        this.workoutByWorkoutId = workoutByWorkoutId;
+    }
+
+    @OneToMany(mappedBy = "exerciseByExerciseId")
+    public Collection<StrengthEntity> getStrengthsByExerciseId() {
+        return strengthsByExerciseId;
+    }
+
+    public void setStrengthsByExerciseId(Collection<StrengthEntity> strengthsByExerciseId) {
+        this.strengthsByExerciseId = strengthsByExerciseId;
     }
 }

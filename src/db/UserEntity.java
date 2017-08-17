@@ -2,6 +2,7 @@ package db;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Created by Erin on 8/13/2017.
@@ -9,15 +10,41 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user", schema = "owl_schema", catalog = "")
 public class UserEntity {
+
+
     private int userId;
     private String firstName;
     private String lastName;
     private Integer age;
     private Integer weight;
-    private Serializable gender;
+    private String gender;
+    private String username;
+    private String password;
+    private Collection<SessionEntity> sessionsByUserId;
+    private String email;
+
+    @Basic
+    @Column(name = "username", nullable = false, length = 50)
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Basic
+    @Column(name = "password", nullable = false, length = 50)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     public int getUserId() {
         return userId;
     }
@@ -27,7 +54,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false, length = 50)
     public String getFirstName() {
         return firstName;
     }
@@ -37,7 +64,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 50)
     public String getLastName() {
         return lastName;
     }
@@ -47,7 +74,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "age")
+    @Column(name = "age", nullable = true)
     public Integer getAge() {
         return age;
     }
@@ -57,7 +84,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "weight")
+    @Column(name = "weight", nullable = true)
     public Integer getWeight() {
         return weight;
     }
@@ -67,12 +94,12 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "gender")
-    public Serializable getGender() {
+    @Column(name = "gender", nullable = true, length = 10)
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Serializable gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -102,5 +129,24 @@ public class UserEntity {
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
+    public Collection<SessionEntity> getSessionsByUserId() {
+        return sessionsByUserId;
+    }
+
+    public void setSessionsByUserId(Collection<SessionEntity> sessionsByUserId) {
+        this.sessionsByUserId = sessionsByUserId;
+    }
+
+    @Basic
+    @Column(name = "email", nullable = false, length = 50)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
